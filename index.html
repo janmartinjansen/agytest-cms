@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agy CMS - Google Sheets Content Management Systeem</title>
+  <meta name="description" content="Een elegant, minimalistisch en premium Content Management Systeem (CMS) gekoppeld aan Google Sheets en gebouwd met vanilla HTML, CSS en JavaScript.">
+  
+  <!-- Modern Stylesheet link -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Marked.js library via CDN for secure client-side Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <h1>Agy CMS</h1>
+      </div>
+      
+      <nav class="nav" aria-label="Hoofdnavigatie">
+        <button id="nav-gebruiker" class="nav-btn active" aria-controls="view-gebruiker">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+          Gebruiker
+        </button>
+        <button id="nav-beheerder" class="nav-btn" aria-controls="view-beheerder">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Beheerder
+        </button>
+      </nav>
+      
+      <button id="btn-settings" class="settings-trigger" aria-label="Instellingen openen" title="Koppeling instellen">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+      </button>
+    </header>
+
+    <!-- MOCK DATA BANNER ALERT -->
+    <div id="mock-banner" class="banner" role="alert" style="display: none;">
+      <div class="banner-content">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>
+          <strong>Mock-modus actief:</strong> Gegevens worden in de browser opgeslagen. Klik op het tandwiel ⚙️ om uw live Google Sheet te koppelen.
+        </span>
+      </div>
+      <button id="btn-close-banner" class="banner-close" aria-label="Melding sluiten">&times;</button>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <main style="flex: 1; display: flex; flex-direction: column;">
+      
+      <!-- GEBRUIKER VIEW (READER MODE) -->
+      <section id="view-gebruiker" class="view-section active">
+        <div class="reader-container">
+          
+          <div id="reader-card" class="reader-card">
+            <!-- Loading Indicator for Reader Card -->
+            <div id="reader-loader" class="loading-overlay">
+              <div class="spinner"></div>
+            </div>
+            
+            <h2 id="reader-title" class="reader-title">Inladen...</h2>
+            <article id="reader-body" class="reader-body">
+              <p>Gegevens worden geladen...</p>
+            </article>
+          </div>
+          
+          <div class="reader-controls">
+            <button id="btn-prev" class="ctrl-btn" aria-label="Vorige pagina" title="Vorige (toets ←)">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            
+            <div id="pagination" class="pagination-text">0 / 0</div>
+            
+            <button id="btn-next" class="ctrl-btn" aria-label="Volgende pagina" title="Volgende (toets →)">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- BEHEERDER VIEW (ADMIN CONTROL PANEL) -->
+      <section id="view-beheerder" class="view-section">
+        <div class="admin-header">
+          <h2>CMS Content Beheer</h2>
+          <button id="btn-add-item" class="btn-primary">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Nieuw item
+          </button>
+        </div>
+        
+        <div class="table-container" style="position: relative; min-height: 200px;">
+          <!-- Loading Indicator for Table -->
+          <div id="admin-loader" class="loading-overlay">
+            <div class="spinner"></div>
+          </div>
+          
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 120px;">ID</th>
+                <th scope="col" style="width: 250px;">Naam</th>
+                <th scope="col">Inhoud Excerpt</th>
+                <th scope="col" style="width: 120px; text-align: right;">Acties</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body">
+              <tr>
+                <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  Gegevens worden geladen...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer style="margin-top: auto; padding-top: 40px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+      <p>&copy; 2026 Agy CMS Test Project. Ontwikkeld met Antigravity.</p>
+    </footer>
+
+  </div>
+
+  <!-- --- EDIT MODAL --- -->
+  <div id="modal-editor" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editor-modal-title">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3 id="editor-modal-title">Nieuw Item Toevoegen</h3>
+        <button id="btn-close-editor" class="modal-close" aria-label="Sluiten">&times;</button>
+      </header>
+      
+      <form id="form-editor">
+        <div class="modal-body">
+          <input type="hidden" id="item-id">
+          
+          <div class="form-group">
+            <label for="item-naam">Naam (Korte Titel)</label>
+            <input type="text" id="item-naam" class="form-control" placeholder="Bijv. Welkom bij de website" required maxlength="100">
+          </div>
+          
+          <div class="editor-layout">
+            <div class="editor-pane">
+              <label for="item-inhoud">Inhoud (Markdown)</label>
+              <textarea id="item-inhoud" class="form-control" placeholder="Typ uw Markdown hier..."></textarea>
+            </div>
+            
+            <div class="editor-pane">
+              <span style="display: block; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-muted);">Live Preview</span>
+              <div id="editor-preview" class="preview-pane">
+                <p style="color: var(--text-muted); font-style: italic;">Voorvertoning verschijnt hier...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <footer class="modal-footer">
+          <button type="button" id="btn-cancel-editor" class="btn-secondary">Annuleren</button>
+          <button type="submit" id="btn-save-item" class="btn-primary">Opslaan</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- --- SETTINGS MODAL --- -->
+  <div id="modal-settings" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal-card settings-modal">
+      <header class="modal-header">
+        <h3 id="settings-modal-title">⚙️ Google Sheets Koppeling</h3>
+        <button id="btn-close-settings" class="modal-close" aria-label="Sluiten">&times;</button>
+      </header>
+      
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="settings-script-url">Google Apps Script Web App URL</label>
+          <input type="url" id="settings-script-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; line-height: 1.4;">
+            Voer hier de volledige Web App URL in van uw geïmplementeerde Google Apps Script. Laat het veld leeg om terug te schakelen naar Mock-modus.
+          </p>
+        </div>
+      </div>
+      
+      <footer class="modal-footer">
+        <button type="button" id="btn-cancel-settings" class="btn-secondary">Annuleren</button>
+        <button id="btn-save-settings" class="btn-primary">Instellingen Opslaan</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- --- TOAST CONTAINER --- -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main JavaScript integration -->
+  <script src="app.js"></script>
+</body>
+</html>
