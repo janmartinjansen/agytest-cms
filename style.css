@@ -688,9 +688,14 @@ textarea.form-control {
 /* Editor Split View Layout (Live Preview) */
 .editor-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 24px;
   height: 480px;
+  transition: grid-template-columns 0.3s ease;
+}
+
+.editor-layout.show-preview {
+  grid-template-columns: 1fr 1fr;
 }
 
 .editor-pane {
@@ -701,6 +706,10 @@ textarea.form-control {
 
 .editor-pane textarea {
   flex: 1;
+}
+
+.editor-layout:not(.show-preview) .editor-pane:last-child {
+  display: none;
 }
 
 .preview-pane {

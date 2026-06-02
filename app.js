@@ -5,7 +5,8 @@ const state = {
   currentIndex: 0,
   scriptUrl: localStorage.getItem('agy_cms_script_url') || '',
   isMockMode: true,
-  isLoading: false
+  isLoading: false,
+  showPreview: localStorage.getItem('agy_cms_show_preview') === 'true'
 };
 
 // --- Mock Data ---
@@ -111,6 +112,8 @@ const DOM = {
   textareaInhoud: document.getElementById('item-inhoud'),
   previewPane: document.getElementById('editor-preview'),
   btnSaveItem: document.getElementById('btn-save-item'),
+  editorLayout: document.querySelector('.editor-layout'),
+  cbShowPreview: document.getElementById('cb-show-preview'),
   
   // Settings Modal
   modalSettings: document.getElementById('modal-settings'),
@@ -137,6 +140,10 @@ function init() {
     state.isMockMode = true;
     DOM.mockBanner.style.display = 'flex';
   }
+  
+  // Preview-instelling initialiseren
+  DOM.cbShowPreview.checked = state.showPreview;
+  togglePreviewLayout(state.showPreview);
   
   // Event listeners binden
   bindEvents();
@@ -185,6 +192,13 @@ function bindEvents() {
   
   // Live Markdown Preview in Editor
   DOM.textareaInhoud.addEventListener('input', updateEditorPreview);
+  
+  // Preview checkbox toggle
+  DOM.cbShowPreview.addEventListener('change', (e) => {
+    state.showPreview = e.target.checked;
+    localStorage.setItem('agy_cms_show_preview', state.showPreview);
+    togglePreviewLayout(state.showPreview);
+  });
 }
 
 // --- View Logica ---
@@ -391,6 +405,8 @@ function renderAdmin() {
 // Open Editor Modal (Nieuw of Bewerken)
 function openEditorModal(id = null) {
   DOM.formEditor.reset();
+  DOM.cbShowPreview.checked = state.showPreview;
+  togglePreviewLayout(state.showPreview);
   DOM.inputId.value = "";
   DOM.previewPane.innerHTML = "<p style='color: var(--text-muted); font-style: italic;'>Voorvertoning verschijnt hier...</p>";
   
@@ -401,7 +417,9 @@ function openEditorModal(id = null) {
       DOM.inputId.value = item.id;
       DOM.inputNaam.value = item.naam;
       DOM.textareaInhoud.value = item.inhoud;
-      updateEditorPreview();
+      if (state.showPreview) {
+        updateEditorPreview();
+      }
     }
   } else {
     DOM.editorTitle.textContent = "➕ Nieuw Item Toevoegen";
@@ -427,6 +445,15 @@ function updateEditorPreview() {
     DOM.previewPane.innerHTML = marked.parse(content);
   } catch (e) {
     DOM.previewPane.innerHTML = content.replace(/\n/g, '<br>');
+  }
+}
+
+function togglePreviewLayout(show) {
+  if (show) {
+    DOM.editorLayout.classList.add('show-preview');
+    updateEditorPreview();
+  } else {
+    DOM.editorLayout.classList.remove('show-preview');
   }
 }
 

@@ -149,10 +149,15 @@
             <label for="item-naam">Naam (Korte Titel)</label>
             <input type="text" id="item-naam" class="form-control" placeholder="Bijv. Welkom bij de website" required maxlength="100">
           </div>
-          
           <div class="editor-layout">
             <div class="editor-pane">
-              <label for="item-inhoud">Inhoud (Markdown)</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label for="item-inhoud" style="margin-bottom: 0;">Inhoud (Markdown)</label>
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.85rem; color: var(--text-muted); font-weight: normal; user-select: none;">
+                  <input type="checkbox" id="cb-show-preview" style="cursor: pointer;">
+                  Toon live preview
+                </label>
+              </div>
               <textarea id="item-inhoud" class="form-control" placeholder="Typ uw Markdown hier..."></textarea>
             </div>
             
