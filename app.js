@@ -6,7 +6,8 @@ const state = {
   scriptUrl: localStorage.getItem('agy_cms_script_url') || '',
   isMockMode: true,
   isLoading: false,
-  showPreview: localStorage.getItem('agy_cms_show_preview') === 'true'
+  showPreview: localStorage.getItem('agy_cms_show_preview') === 'true',
+  theme: localStorage.getItem('agy_cms_theme') || 'dark'
 };
 
 // --- Mock Data ---
@@ -114,6 +115,7 @@ const DOM = {
   btnSaveItem: document.getElementById('btn-save-item'),
   editorLayout: document.querySelector('.editor-layout'),
   cbShowPreview: document.getElementById('cb-show-preview'),
+  btnThemeToggle: document.getElementById('btn-theme-toggle'),
   
   // Settings Modal
   modalSettings: document.getElementById('modal-settings'),
@@ -141,6 +143,13 @@ function init() {
     DOM.mockBanner.style.display = 'flex';
   }
   
+  // Thema initialiseren
+  if (state.theme === 'light') {
+    document.documentElement.classList.add('light-theme');
+  } else {
+    document.documentElement.classList.remove('light-theme');
+  }
+  
   // Preview-instelling initialiseren
   DOM.cbShowPreview.checked = state.showPreview;
   togglePreviewLayout(state.showPreview);
@@ -163,6 +172,9 @@ function bindEvents() {
   DOM.btnCloseSettings.addEventListener('click', closeSettingsModal);
   DOM.btnCancelSettings.addEventListener('click', closeSettingsModal);
   DOM.btnSaveSettings.addEventListener('click', saveSettings);
+  
+  // Theme Toggle
+  DOM.btnThemeToggle.addEventListener('click', toggleTheme);
   
   // Banner
   DOM.btnCloseBanner.addEventListener('click', () => {
@@ -667,4 +679,18 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+// Wisselen tussen licht en donker thema
+function toggleTheme() {
+  if (document.documentElement.classList.contains('light-theme')) {
+    document.documentElement.classList.remove('light-theme');
+    state.theme = 'dark';
+    showToast("Donkere modus geactiveerd", "info");
+  } else {
+    document.documentElement.classList.add('light-theme');
+    state.theme = 'light';
+    showToast("Lichte modus geactiveerd", "info");
+  }
+  localStorage.setItem('agy_cms_theme', state.theme);
 }
